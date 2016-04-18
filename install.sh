@@ -11,7 +11,6 @@ yum install freeradius -y > /dev/null
 echo "Finish installing freeradius."
 
 ## eduroam
-#TODO(huxuan): Backup before remove
 echo "Begin to set $RADIUS_MAIN_DIR/sites-[available|enabled]/eduroam."
 rm -f $RADIUS_MAIN_DIR/sites-enabled/default
 envsubst < templates/eduroam > $RADIUS_MAIN_DIR/sites-available/eduroam
