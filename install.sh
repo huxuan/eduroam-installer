@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
+export DOLLAR='$'
+
 echo "Begin to loading configuration."
 source config.sh
-export DOLLAR='$'
 echo "Finish laoding configuration."
 
 echo "Begin to install freeradius."
