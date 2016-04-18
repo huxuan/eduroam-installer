@@ -1,0 +1,32 @@
+server eduroam-inner-tunnel {
+    listen {
+       ipaddr = 127.0.0.1
+       port = 18120
+       type = auth
+    }
+
+    authorize {
+        auth_log
+        eap
+        files
+        mschap
+        pap
+    }
+
+    authenticate {
+        Auth-Type PAP {
+            pap
+        }
+        Auth-Type MS-CHAP {
+            mschap
+        }
+        eap
+    }
+
+    post-auth {
+        reply_log
+        Post-Auth-Type REJECT {
+            reply_log
+        }
+    }
+}
