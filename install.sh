@@ -19,7 +19,7 @@ echo "Finish setting $RADIUS_MAIN_DIR/sites-[available|enabled]/eduroam."
 
 ## pre-proxy
 echo "Begin to set $RADIUS_MAIN_DIR/mods-config/attr_filter/pre-proxy."
-sed -i '${s/$/,\n\tCalling-Station-Id =* ANY,\n\tCalled-Station-Id =* ANY,\n\tOperator-Name =* ANY/}' etc/raddb/mods-config/attr_filter/pre-proxy
+sed -i '${s/$/,\n\tCalling-Station-Id =* ANY,\n\tCalled-Station-Id =* ANY,\n\tOperator-Name =* ANY/}' $RADIUS_MAIN_DIR/mods-config/attr_filter/pre-proxy
 echo "Finish setting $RADIUS_MAIN_DIR/mods-config/attr_filter/pre-proxy."
 
 ## clients.conf
