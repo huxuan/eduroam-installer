@@ -35,7 +35,7 @@ echo "Begin to set $RADIUS_MAIN_DIR/clients.conf."
 if [ ! -f $BACKUP_DIR/clients.conf ]; then
     cp $RADIUS_MAIN_DIR/clients.conf $BACKUP_DIR/clients.conf
 else
-    mv -f $BACKUP_DIR/clients.conf $RADIUS_MAIN_DIR/clients.conf
+    cp -f $BACKUP_DIR/clients.conf $RADIUS_MAIN_DIR/clients.conf
 fi
 envsubst < templates/clients.conf >> $RADIUS_MAIN_DIR/clients.conf
 echo "Finish setting $RADIUS_MAIN_DIR/clients.conf."
@@ -45,7 +45,7 @@ echo "Begin to set $RADIUS_MAIN_DIR/proxy.conf."
 if [ ! -f $BACKUP_DIR/proxy.conf ]; then
     cp $RADIUS_MAIN_DIR/proxy.conf $BACKUP_DIR/proxy.conf
 else
-    mv -f $BACKUP_DIR/proxy.conf $RADIUS_MAIN_DIR/proxy.conf
+    cp -f $BACKUP_DIR/proxy.conf $RADIUS_MAIN_DIR/proxy.conf
 fi
 envsubst < templates/proxy.conf >> $RADIUS_MAIN_DIR/proxy.conf
 echo "Finish setting $RADIUS_MAIN_DIR/proxy.conf."
