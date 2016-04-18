@@ -1,2 +1,5 @@
 #Folders for testing.
 etc/
+
+#Vim temporary files.
+*.swp
