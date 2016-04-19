@@ -64,4 +64,4 @@ echo "Setting $RADIUS_MAIN_DIR/users."
 rm -f $RADIUS_MAIN_DIR/users
 envsubst < templates/users > $RADIUS_MAIN_DIR/users
 
-echo "Finished installation of eduroam."
+echo "Finish installing eduroam."
