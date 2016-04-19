@@ -1,6 +1,3 @@
-#export RADIUS_MAIN_DIR="/root/Code/eduroam-installer/etc/raddb"
-export RADIUS_MAIN_DIR="/etc/raddb"
-
 ## clients.conf
 export CLIENT_IP_ADDRESS="172.31.52.2"
 export CLIENT_SECRET="NbsROz14fz3wFjDe"

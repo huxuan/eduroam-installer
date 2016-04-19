@@ -2,6 +2,7 @@
 
 ## shared variable and function
 export DOLLAR='$'
+export RADIUS_MAIN_DIR="/etc/raddb"
 function generate_random_password {
     head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16;
 }
@@ -32,14 +33,6 @@ else # well, I'm out of ideas for now
     echo '==> Failed to determine distro and version.'
     exit 1
 fi
-DISTRO_VERSION_MSG="[Info] $DISTRO $VERSION detected."
-DISTRO_VERSION_WARNING_MSG="[Warning] $DISTRO $VERSION is not fully supported. Try to install from source but no success guarantee."
-# Detect specific centos version.
-if [ "$DISTRO" == "centos" ] && [ "$VERSION" == 7 ]; then
-    echo $DISTRO_VERSION_MSG
-else
-    echo $DISTRO_VERSION_WARNING_MSG
-fi
 # Set up backup folder.
 BACKUP_DIR='backup'
 if [ ! -d "$BACKUP_DIR" ]; then
@@ -49,9 +42,29 @@ fi
 echo "Loading configuration."
 source config.sh
 
+# Install freeradius based on specific distribution and version
 echo "Installing freeradius."
-# yum update -y
-yum install freeradius -y > /dev/null
+DISTRO_VERSION_MSG="[Info] $DISTRO $VERSION detected."
+DISTRO_VERSION_WARNING_MSG="[Warning] $DISTRO $VERSION is not fully supported. Try to install from source but no success guarantee."
+if [ "$DISTRO" == "centos" ] && [ "$VERSION" != 7 ]; then
+    echo $DISTRO_VERSION_MSG
+    export RADIUS_MAIN_DIR="/etc/raddb"
+    # yum update -y
+    yum install freeradius -y > /dev/null
+elif [ "$DISTRO" == "centos" ]; then
+    echo $DISTRO_VERSION_WARNING_MSG
+    export RADIUS_MAIN_DIR="/usr/local/etc/raddb/"
+    yum install gcc libtalloc-devel openssl-devel -y
+    if [ ! -f cd freeradius-server-3.0.11.tar.gz ]; then
+        wget ftp://ftp.freeradius.org/pub/freeradius/freeradius-server-3.0.11.tar.gz
+    fi
+    tar -zxvf freeradius-server-3.0.11.tar.gz
+    cd freeradius-server-3.0.11 && ./configure && make && make install
+    cd ..
+else
+    echo "==> $DISTRO $VERSION is not supported, aborting"
+    exit 1
+fi
 
 ## eduroam
 echo "Setting $RADIUS_MAIN_DIR/sites-[available|enabled]/eduroam."
