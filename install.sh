@@ -51,7 +51,7 @@ if [ "$DISTRO" == "centos" ] && [ "$VERSION" == 7 ]; then
     export RADIUS_MAIN_DIR="/etc/raddb"
     # yum update -y
     yum install freeradius -y > /dev/null
-elif [ "$DISTRO" == "centos" ]; then
+elif [ "$DISTRO" == "centos" ] || [ "$DISTRO" == "red" ]; then
     echo $DISTRO_VERSION_WARNING_MSG
     export RADIUS_MAIN_DIR="/usr/local/etc/raddb"
     yum install gcc libtalloc-devel openssl-devel -y
@@ -60,6 +60,7 @@ elif [ "$DISTRO" == "centos" ]; then
     fi
     tar -zxvf freeradius-server-3.0.11.tar.gz
     cd freeradius-server-3.0.11 && ./configure && make && make install
+    sed -i 's/allow_vulnerable_openssl = no/allow_vulnerable_openssl = CVE-2014-0160/' $RADIUS_MAIN_DIR/radiusd.conf
     cd ..
 else
     echo "==> $DISTRO $VERSION is not supported, aborting"
