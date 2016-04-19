@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+
+## shared variable and function
 export DOLLAR='$'
 function generate_random_password {
     head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16;
