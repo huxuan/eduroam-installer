@@ -45,7 +45,19 @@ if [ ! -f $BACKUP_DIR/proxy.conf ]; then
 else
     cp -f $BACKUP_DIR/proxy.conf $RADIUS_MAIN_DIR/proxy.conf
 fi
-envsubst < templates/proxy.conf >> $RADIUS_MAIN_DIR/proxy.conf
+for IDX in "${!PARENT_IP_ADDRESSES[@]}"; do
+    export IDX
+    export IP_ADDRESS=${PARENT_IP_ADDRESSES[$IDX]}
+    export SECRET=$(generate_random_password)
+    PARENT_SECRETS[$IDX]=$SECRET
+    envsubst < templates/proxy.home_server.conf >> $RADIUS_MAIN_DIR/proxy.conf
+done
+envsubst < templates/proxy.home_server_pool.header.conf >> $RADIUS_MAIN_DIR/proxy.conf
+for IDX in "${!PARENT_IP_ADDRESSES[@]}"; do
+    export IDX
+    envsubst < templates/proxy.home_server_pool.body.conf >> $RADIUS_MAIN_DIR/proxy.conf
+done
+envsubst < templates/proxy.home_server_pool.footer.conf >> $RADIUS_MAIN_DIR/proxy.conf
 
 ## eap
 echo "Setting $RADIUS_MAIN_DIR/mods-[available|enabled]/eap"
