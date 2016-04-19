@@ -80,3 +80,7 @@ rm -f $RADIUS_MAIN_DIR/users
 envsubst < templates/users > $RADIUS_MAIN_DIR/users
 
 echo "Finish installing eduroam."
+echo "List of upstream eduroam server IP address and corresponding secret:"
+for IDX in "${!PARENT_IP_ADDRESSES[@]}"; do
+    echo -e "${PARENT_IP_ADDRESSES[$IDX]}\t${PARENT_SECRETS[$IDX]}"
+done
