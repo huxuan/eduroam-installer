@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 export DOLLAR='$'
+function generate_random_password {
+    head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16;
+}
 
 BACKUP_DIR='backup'
 if [ ! -d "$BACKUP_DIR" ]; then
