@@ -46,16 +46,16 @@ source config.sh
 echo "Installing freeradius."
 DISTRO_VERSION_MSG="[Info] $DISTRO $VERSION detected."
 DISTRO_VERSION_WARNING_MSG="[Warning] $DISTRO $VERSION is not fully supported. Try to install from source but no success guarantee."
-if [ "$DISTRO" == "centos" ] && [ "$VERSION" != 7 ]; then
+if [ "$DISTRO" == "centos" ] && [ "$VERSION" == 7 ]; then
     echo $DISTRO_VERSION_MSG
     export RADIUS_MAIN_DIR="/etc/raddb"
     # yum update -y
     yum install freeradius -y > /dev/null
 elif [ "$DISTRO" == "centos" ]; then
     echo $DISTRO_VERSION_WARNING_MSG
-    export RADIUS_MAIN_DIR="/usr/local/etc/raddb/"
+    export RADIUS_MAIN_DIR="/usr/local/etc/raddb"
     yum install gcc libtalloc-devel openssl-devel -y
-    if [ ! -f cd freeradius-server-3.0.11.tar.gz ]; then
+    if [ ! -f freeradius-server-3.0.11.tar.gz ]; then
         wget ftp://ftp.freeradius.org/pub/freeradius/freeradius-server-3.0.11.tar.gz
     fi
     tar -zxvf freeradius-server-3.0.11.tar.gz
