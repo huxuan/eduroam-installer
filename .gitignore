@@ -6,3 +6,6 @@ backup/
 
 #Vim temporary files.
 *.swp
+
+#freeradius related
+freeradius*
