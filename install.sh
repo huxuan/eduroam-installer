@@ -6,6 +6,41 @@ function generate_random_password {
     head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16;
 }
 
+## check prerequirements
+# Only support Linux currently.
+if [[ `uname` != 'Linux' ]]; then
+    echo '==> platform not supported, aborting'
+    exit 1
+fi
+# Get distribution and version.
+if [[ -r /etc/os-release ]]; then
+    # this will get the required information without dirtying any env state
+    DIST_VERS="$( ( . /etc/os-release &>/dev/null
+                    echo "$ID $VERSION_ID") )"
+    DISTRO="${DIST_VERS%% *}" # get our distro name
+    VERSION="${DIST_VERS##* }" # get our version number
+elif [[ -r /etc/redhat-release ]]; then
+    DIST_VERS=( $( cat /etc/redhat-release ) ) # make the file an array
+    DISTRO="${DIST_VERS[0],,}" # get the first element and get lcase
+    VERSION="${DIST_VERS[2]}" # get the third element (version)
+elif [[ -r /etc/lsb-release ]]; then
+    DIST_VERS="$( ( . /etc/lsb-release &>/dev/null
+                    echo "${DISTRIB_ID,,} $DISTRIB_RELEASE") )"
+    DISTRO="${DIST_VERS%% *}" # get our distro name
+    VERSION="${DIST_VERS##* }" # get our version number
+else # well, I'm out of ideas for now
+    echo '==> Failed to determine distro and version.'
+    exit 1
+fi
+DISTRO_VERSION_MSG="[Info] $DISTRO $VERSION detected."
+DISTRO_VERSION_WARNING_MSG="[Warning] $DISTRO $VERSION is not fully supported. Try to install from source but no success guarantee."
+# Detect specific centos version.
+if [ "$DISTRO" == "centos" ] && [ "$VERSION" == 7 ]; then
+    echo $DISTRO_VERSION_MSG
+else
+    echo $DISTRO_VERSION_WARNING_MSG
+fi
+# Set up backup folder.
 BACKUP_DIR='backup'
 if [ ! -d "$BACKUP_DIR" ]; then
     mkdir $BACKUP_DIR
