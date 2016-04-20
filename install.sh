@@ -3,6 +3,7 @@
 ## shared variable and function
 export DOLLAR='$'
 export RADIUS_MAIN_DIR="/etc/raddb"
+export PARENT_SECRETS=()
 function generate_random_password {
     head /dev/urandom | tr -dc A-Za-z0-9 | head -c 16;
 }
