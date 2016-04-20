@@ -36,9 +36,7 @@ else # well, I'm out of ideas for now
 fi
 # Set up backup folder.
 BACKUP_DIR='backup'
-if [ ! -d "$BACKUP_DIR" ]; then
-    mkdir $BACKUP_DIR
-fi
+[[ -d "$BACKUP_DIR" ]] || mkdir $BACKUP_DIR
 
 echo "Loading configuration."
 source config.sh
@@ -56,10 +54,8 @@ elif [ "$DISTRO" == "centos" ] || [ "$DISTRO" == "red" ]; then
     echo $DISTRO_VERSION_WARNING_MSG
     export RADIUS_MAIN_DIR="/usr/local/etc/raddb"
     yum install gcc libtalloc-devel openssl-devel -y
-    if [ ! -f freeradius-server-3.0.11.tar.gz ]; then
-        wget ftp://ftp.freeradius.org/pub/freeradius/freeradius-server-3.0.11.tar.gz
-    fi
-    tar -zxvf freeradius-server-3.0.11.tar.gz
+    [[ -f freeradius-server-3.0.11.tar.gz ]] || wget ftp://ftp.freeradius.org/pub/freeradius/freeradius-server-3.0.11.tar.gz
+    [[ -d freeradius-server-3.0.11 ]] || tar -zxvf freeradius-server-3.0.11.tar.gz
     cd freeradius-server-3.0.11 && ./configure && make && make install
     sed -i 's/allow_vulnerable_openssl = no/allow_vulnerable_openssl = CVE-2014-0160/' $RADIUS_MAIN_DIR/radiusd.conf
     cd ..
@@ -76,9 +72,7 @@ ln -sf $RADIUS_MAIN_DIR/sites-available/eduroam $RADIUS_MAIN_DIR/sites-enabled/e
 
 ## pre-proxy
 echo "Setting $RADIUS_MAIN_DIR/mods-config/attr_filter/pre-proxy."
-if [ ! -f $BACKUP_DIR/pre-proxy ]; then
-    cp $RADIUS_MAIN_DIR/mods-config/attr_filter/pre-proxy $BACKUP_DIR/pre-proxy
-fi
+[[ -f $BACKUP_DIR/pre-proxy ]] || cp $RADIUS_MAIN_DIR/mods-config/attr_filter/pre-proxy $BACKUP_DIR/pre-proxy
 sed -i '${s/$/,\n\tCalling-Station-Id =* ANY,\n\tCalled-Station-Id =* ANY,\n\tOperator-Name =* ANY/}' $RADIUS_MAIN_DIR/mods-config/attr_filter/pre-proxy
 
 ## clients.conf
@@ -114,9 +108,7 @@ envsubst < templates/proxy.home_server_pool.footer.conf >> $RADIUS_MAIN_DIR/prox
 ## eap
 echo "Setting $RADIUS_MAIN_DIR/mods-[available|enabled]/eap"
 sh $RADIUS_MAIN_DIR/certs/bootstrap
-if [ ! -f $BACKUP_DIR/eap ]; then
-    cp $RADIUS_MAIN_DIR/mods-available/eap $BACKUP_DIR/eap
-fi
+[[ -f $BACKUP_DIR/eap ]] || cp $RADIUS_MAIN_DIR/mods-available/eap $BACKUP_DIR/eap
 envsubst < templates/eap > $RADIUS_MAIN_DIR/mods-available/eap
 ln -sf $RADIUS_MAIN_DIR/mods-available/eap $RADIUS_MAIN_DIR/mods-enabled/eap
 
@@ -128,9 +120,7 @@ ln -sf $RADIUS_MAIN_DIR/sites-available/eduroam-inner-tunnel $RADIUS_MAIN_DIR/si
 
 ## authorize
 echo "Setting $RADIUS_MAIN_DIR/mods-config/files/authorize."
-if [ ! -f $BACKUP_DIR/authorize ]; then
-    cp $RADIUS_MAIN_DIR/mods-config/files/authorize $BACKUP_DIR/authorize
-fi
+[[ -f $BACKUP_DIR/authorize ]] || cp $RADIUS_MAIN_DIR/mods-config/files/authorize $BACKUP_DIR/authorize
 envsubst < templates/authorize > $RADIUS_MAIN_DIR/mods-config/files/authorize
 
 echo "Finish the installation and configuration of eduroam."
