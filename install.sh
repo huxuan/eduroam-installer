@@ -1,6 +1,7 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 ## shared variable and function
+PWD=`pwd`
 export DOLLAR='$'
 export RADIUS_MAIN_DIR="/etc/raddb"
 export PARENT_SECRETS=()
@@ -32,14 +33,14 @@ elif [[ -r /etc/lsb-release ]]; then
     VERSION="${DIST_VERS##* }" # get our version number
 else # well, I'm out of ideas for now
     echo '==> Failed to determine distro and version.'
-    exit 1
+    exit 2
 fi
 # Set up backup folder.
 BACKUP_DIR='backup'
 [[ -d "$BACKUP_DIR" ]] || mkdir $BACKUP_DIR
 
 echo "Loading configuration."
-source config.sh
+. $PWD/config.sh
 
 # Install freeradius based on specific distribution and version
 echo "Installing freeradius."
@@ -49,19 +50,19 @@ if [ "$DISTRO" == "centos" ] && [ "$VERSION" == 7 ]; then
     echo $DISTRO_VERSION_MSG
     export RADIUS_MAIN_DIR="/etc/raddb"
     # yum update -y
-    yum install freeradius -y
+    yum install -y -q freeradius
 elif [ "$DISTRO" == "centos" ] || [ "$DISTRO" == "red" ]; then
     echo $DISTRO_VERSION_WARNING_MSG
     export RADIUS_MAIN_DIR="/usr/local/etc/raddb"
-    yum install gcc libtalloc-devel openssl-devel -y
+    yum install -y -q gcc libtalloc-devel openssl-devel
     [[ -f freeradius-server-3.0.11.tar.gz ]] || wget ftp://ftp.freeradius.org/pub/freeradius/freeradius-server-3.0.11.tar.gz
-    [[ -d freeradius-server-3.0.11 ]] || tar -zxvf freeradius-server-3.0.11.tar.gz
+    [[ -d freeradius-server-3.0.11 ]] || tar -zxf freeradius-server-3.0.11.tar.gz
     cd freeradius-server-3.0.11 && ./configure && make && make install
     sed -i 's/allow_vulnerable_openssl = no/allow_vulnerable_openssl = CVE-2014-0160/' $RADIUS_MAIN_DIR/radiusd.conf
-    cd ..
+    cd $PWD
 else
     echo "==> $DISTRO $VERSION is not supported, aborting"
-    exit 1
+    exit 3
 fi
 
 ## eduroam
