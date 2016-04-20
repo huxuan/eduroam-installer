@@ -133,8 +133,12 @@ if [ ! -f $BACKUP_DIR/authorize ]; then
 fi
 envsubst < templates/authorize > $RADIUS_MAIN_DIR/mods-config/files/authorize
 
-echo "Finish installing eduroam."
+echo "Finish the installation and configuration of eduroam."
+echo "========== Some useful information ========="
 echo "List of upstream eduroam server IP address and corresponding secret:"
 for IDX in "${!PARENT_IP_ADDRESSES[@]}"; do
-    echo -e "${PARENT_IP_ADDRESSES[$IDX]}\t${PARENT_SECRETS[$IDX]}"
+    echo -e "\t${PARENT_IP_ADDRESSES[$IDX]}\t${PARENT_SECRETS[$IDX]}"
 done
+echo "Test account for Identity Provider (IdP):"
+echo -e "\tUsername: test@$LOCAL_SCHOOL_REALM\tPassword: HelloWorld"
+echo "========== End of useful information =========="
