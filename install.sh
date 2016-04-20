@@ -50,7 +50,7 @@ if [ "$DISTRO" == "centos" ] && [ "$VERSION" == 7 ]; then
     echo $DISTRO_VERSION_MSG
     export RADIUS_MAIN_DIR="/etc/raddb"
     # yum update -y
-    yum install freeradius -y > /dev/null
+    yum install freeradius -y
 elif [ "$DISTRO" == "centos" ] || [ "$DISTRO" == "red" ]; then
     echo $DISTRO_VERSION_WARNING_MSG
     export RADIUS_MAIN_DIR="/usr/local/etc/raddb"
@@ -112,7 +112,7 @@ envsubst < templates/proxy.home_server_pool.footer.conf >> $RADIUS_MAIN_DIR/prox
 
 ## eap
 echo "Setting $RADIUS_MAIN_DIR/mods-[available|enabled]/eap"
-sh $RADIUS_MAIN_DIR/certs/bootstrap > /dev/null
+sh $RADIUS_MAIN_DIR/certs/bootstrap
 if [ ! -f $BACKUP_DIR/eap ]; then
     cp $RADIUS_MAIN_DIR/mods-available/eap $BACKUP_DIR/eap
 fi
