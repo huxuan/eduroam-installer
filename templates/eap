@@ -10,7 +10,7 @@ eap {
         private_key_password = whatever
         private_key_file = ${DOLLAR}{certdir}/server.key
         certificate_file = ${DOLLAR}{certdir}/server.pem
-        ca_file = "${DOLLAR}{certdir}/ca.pem"
+        ca_file = "${DOLLAR}{cadir}/ca.pem"
         dh_file = ${DOLLAR}{certdir}/dh
         random_file = /dev/urandom
         fragment_size = 1024
