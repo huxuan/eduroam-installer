@@ -125,10 +125,12 @@ rm -f $RADIUS_MAIN_DIR/sites-enabled/inner-tunnel
 envsubst < templates/eduroam-inner-tunnel > $RADIUS_MAIN_DIR/sites-available/eduroam-inner-tunnel
 ln -sf $RADIUS_MAIN_DIR/sites-available/eduroam-inner-tunnel $RADIUS_MAIN_DIR/sites-enabled/eduroam-inner-tunnel
 
-## users
-echo "Setting $RADIUS_MAIN_DIR/users."
-rm -f $RADIUS_MAIN_DIR/users
-envsubst < templates/users > $RADIUS_MAIN_DIR/users
+## authorize
+echo "Setting $RADIUS_MAIN_DIR/mods-config/files/authorize."
+if [ ! -f $BACKUP_DIR/authorize ]; then
+    cp $RADIUS_MAIN_DIR/mods-config/files/authorize $BACKUP_DIR/authorize
+fi
+envsubst < templates/authorize > $RADIUS_MAIN_DIR/mods-config/files/authorize
 
 echo "Finish installing eduroam."
 echo "List of upstream eduroam server IP address and corresponding secret:"
