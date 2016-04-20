@@ -6,3 +6,5 @@ clean:
 	rm -rf /usr/local/etc/raddb
 	rm -rf backup
 	rm -rf freeradius*
+run:
+	radiusd -X
